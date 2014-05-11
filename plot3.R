@@ -1,0 +1,21 @@
+plot3<-function()
+{
+    d<-read.csv('.\\data\\household_power_consumption.txt',sep=';',colClasses=c(NA,NA,"NULL","NULL","NULL","NULL","NULL","NULL","NULL"))
+    eDate<-paste(d$Date,d$Time)
+    eDate<-as.Date(strptime(paste(d$Date,d$Time),"%d/%m/%Y %H:%M:%S"))
+    startDate<-as.Date("2007-02-01")
+    endDate<-as.Date("2007-02-03")
+    c<-(eDate>=startDate & eDate<endDate)
+    d<-read.csv('.\\data\\household_power_consumption.txt',sep=';',header=TRUE,colClasses=c("NULL","NULL",NA,NA,NA,NA,NA,NA,NA),na.string="?")
+    selectedData<-data.frame(eDate[c==TRUE],d[c==TRUE,])    
+
+    plot_colors=c('black','red','blue')
+    png(filename = "plot3.png", width = 480, height = 480, units="px")
+    plot(selectedData$Sub_metering_1,type='l',xaxt="n",ann=FALSE)
+    axis(1,at=seq(1,2880,1439),lab=weekdays(seq(startDate,endDate,by='1 day'),1))
+    title("Plot 3", ylab="Energy sub meeting")
+    lines(selectedData$Sub_metering_2,type='l',col=plot_colors[2])
+    lines(selectedData$Sub_metering_3,type='l',col=plot_colors[3])
+    legend("topright",names(selectedData[,6:8]),col=plot_colors,horiz=FALSE,lty=c(1,1))
+    dev.off()
+}

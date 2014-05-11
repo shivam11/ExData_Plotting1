@@ -1,0 +1,16 @@
+plot2<-function()
+{
+    d<-read.csv('.\\data\\household_power_consumption.txt',sep=';',colClasses=c(NA,NA,"NULL","NULL","NULL","NULL","NULL","NULL","NULL"))
+    eDate<-paste(d$Date,d$Time)
+    eDate<-as.Date(strptime(paste(d$Date,d$Time),"%d/%m/%Y %H:%M:%S"))
+    startDate<-as.Date("2007-02-01")
+    endDate<-as.Date("2007-02-03")
+    c<-(eDate>=startDate & eDate<endDate)
+    d<-read.csv('.\\data\\household_power_consumption.txt',sep=';',header=TRUE,colClasses=c("NULL","NULL",NA,NA,NA,NA,NA,NA,NA),na.string="?")
+    selectedData<-data.frame(eDate[c==TRUE],d[c==TRUE,])
+    png(filename = "plot2.png", width = 480, height = 480, units = "px")    
+    plot(selectedData$Global_active_power,type='l',xaxt="n",ann=FALSE)
+    axis(1,at=seq(1,2880,1439),lab=weekdays(seq(startDate,endDate,by='1 day'),1))
+    title("Plot 2", ylab="Global Active Power (kilowatts)")
+    dev.off()
+}
